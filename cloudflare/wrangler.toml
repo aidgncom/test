@@ -1,0 +1,13 @@
+name = "resonator"
+main = "resonator.cloudflare.mjs"
+compatibility_date = "2026-01-01"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "resonator"
+
+[ai]
+binding = "AI"
+
+[triggers]
+crons = ["0 0 * * *"]
