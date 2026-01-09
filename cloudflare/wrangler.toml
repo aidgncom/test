@@ -19,4 +19,3 @@ binding = "AI"
 
 [triggers]
 crons = ["0 0 * * *"]
-
