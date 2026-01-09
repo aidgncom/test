@@ -1,5 +1,5 @@
 name = "resonator"
-main = "resonator.cloudflare.mjs"
+main = "resonator.cloudflare.js"
 compatibility_date = "2026-01-01"
 
 [observability]
