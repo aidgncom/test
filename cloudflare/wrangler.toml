@@ -4,11 +4,11 @@ compatibility_date = "2026-01-01"
 no_bundle = true
 
 [observability]
-[observability.logs]
 enabled = true
 head_sampling_rate = 1
+
+[observability.logs]
 invocation_logs = false
-persist = true
 
 [[r2_buckets]]
 binding = "R2"
