@@ -59,7 +59,7 @@ const STREAMING = {			// Security and Personalization
 	HUMAN: true,					// Listen for the human BEAT (default: true)
 };
 
-const ARCHIVING = { 		// Serverless Analytics with AI Insights
+const ARCHIVING = { 		// Serverless analytics with generative AI insights
 	LOG: true,						// Archive user journeys and push logs to cloud storage (default: true)
 	TIME: false,					// Include timestamp in logs, excluding it helps reduce re-identification risk and strengthen compliance (default: false)
 	HASH: false,					// Include hash in logs, must be enabled for reassembly when batches are fragmented by producer settings like POW=true (default: false)
@@ -73,9 +73,9 @@ const ARCHIVING = { 		// Serverless Analytics with AI Insights
 		MINCLICK: 1,						// Skip logs below N clicks (default: 1)
 	},
 	AI: {
-		INCLUDE: false,						// Include AI insights in logs (default: false)
-		NAME: 'AI', 						// AI binding name (default: AI)
-		MODEL: '@cf/openai/gpt-oss-20b',	// AI model (default: @cf/openai/gpt-oss-20b)
+		INCLUDE: true,						// Include AI insights in logs (default: true)
+		NAME: 'AI', 						// AI binding name (default: 'AI')
+		MODEL: '@cf/openai/gpt-oss-20b',	// AI model (default: '@cf/openai/gpt-oss-20b')
 		PROMPT: 1,							// Prompt format, higher numbers need more capable AI (default: 1)
 		SITE: 1,							// Site type context for AI insights (default: 1)
 		TYPE: [								// Pick your site 1-20 type from the list
@@ -107,19 +107,19 @@ const ARCHIVING = { 		// Serverless Analytics with AI Insights
 											// Force run: https://yourdomain.com/rhythm/archive?token=yoursecret&force
 											// Basic run for specific date: https://yourdomain.com/rhythm/archive?token=yoursecret&date=2025-11-17
 											// Force run for specific date: https://yourdomain.com/rhythm/archive?token=yoursecret&date=2025-11-17&force
-											// Automated run (Cron Job) via wrangler.toml: [[triggers.crons]] crons = ["0 3 * * *"]
+											// Automated run (Cron Job) via wrangler.toml: [[triggers.crons]] crons = ["0 0 * * *"]
 		CRON: true,							// Enable cron job (default: true)
-		NAME: 'R2',							// Storage binding name (default: R2)
-		TOKEN: 'yoursecret',				// Secret token (default: yoursecret)
+		NAME: 'R2',							// Storage binding name (default: 'R2')
+		TOKEN: 'yoursecret',				// Secret token (default: 'yoursecret')
 											// 🚨 Important: Change this token before deployment. Example '1a2b3c4b'
 		GMT: 9,								// Timezone offset (default: GMT+9)
 		BATCH: 6,							// Files per batch for memory safety (default: 6)
 		LOOKBACK: 2,						// Days to include from recent window (default: 2)
 		GITHUB: {							// Back up to a private GitHub repo for direct conversation with advanced AI
-			OWNER: 'yourusername',
-			REPO: 'yourrepo',
-			BRANCH: 'main',
-			COMMIT: 'Archive logs for',		// Commit message prefix (default: Archive logs for YYYY-MM-DD)
+			OWNER: '',						// 🚨 Important: Leave empty to auto-detect from GITHUB_TOKEN (default: '')
+			REPO: 'ai-insights',			// Must match an existing private repository to prevent data exposure (default: 'ai-insights')
+			BRANCH: 'main',					// Target branch for archive commits (default: 'main')
+			COMMIT: 'Archive logs for',		// Commit message prefix (default: 'Archive logs for' YYYY-MM-DD)
 		}
 	}
 };
@@ -398,6 +398,7 @@ export default {
 				return Array(ARCHIVING.STORE.LOOKBACK).fill(0).map((_, i) => new Date(now - i * 86400000).toISOString().slice(0, 10)); // Days to include from recent window (default: 2)
 			})();
 			const results = [];
+			const owner = env.GITHUB_TOKEN && (ARCHIVING.STORE.GITHUB.OWNER || await user(env.GITHUB_TOKEN)); // Leave empty to auto-detect from GITHUB_TOKEN (default: '')
 			for (const target of targets) {
 				const path = `archive/${target}.${ARCHIVING.NDJSON ? 'jsonl' : 'md'}`;
 				if (!force && await env[ARCHIVING.STORE.NAME].head(path)) { // Skip if report already exists
@@ -413,7 +414,6 @@ export default {
 					day1 !== day2 ? list(env[ARCHIVING.STORE.NAME], day2 + '/') : Promise.resolve([])
 				]);
 				const objects = [...list1, ...list2];
-
 				let content, total = 0;
 				if (ARCHIVING.NDJSON) { // NDJSON: single-line JSON only, no metadata or AI insights
 					const lines = [];
@@ -539,12 +539,10 @@ export default {
 					content = blocks.join('');
 					total = meta.total;
 				}
-
 				const saves = [env[ARCHIVING.STORE.NAME].put(path, content)]; // R2 save
-				if (env.GITHUB_TOKEN) { // GitHub save if token exists
-					const file = `archive/${target}.${ARCHIVING.NDJSON ? 'jsonl' : 'md'}`;
-					const sha = await hash(env.GITHUB_TOKEN, file);
-					saves.push(fetch(`https://api.github.com/repos/${ARCHIVING.STORE.GITHUB.OWNER}/${ARCHIVING.STORE.GITHUB.REPO}/contents/${file}`, {
+				if (owner) { // GitHub backup if owner exists
+					const sha = await hash(env.GITHUB_TOKEN, owner, path);
+					saves.push(fetch(`https://api.github.com/repos/${owner}/${ARCHIVING.STORE.GITHUB.REPO}/contents/${path}`, {
 						method: 'PUT',
 						headers: {
 							'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
@@ -553,13 +551,13 @@ export default {
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
-							message: `${ARCHIVING.STORE.GITHUB.COMMIT} ${target}`, // Commit message prefix (default: Archive logs for YYYY-MM-DD)
+							message: `${ARCHIVING.STORE.GITHUB.COMMIT} ${target}`,
 							content: btoa(unescape(encodeURIComponent(content))),
 							branch: ARCHIVING.STORE.GITHUB.BRANCH,
 							...(sha && {sha})
 						})
 					}));
-				}		
+				}				
 				await Promise.all(saves); // Parallel save to R2 and GitHub
 				results.push({date: target, status: 'merged', entries: total});
 			}
@@ -692,18 +690,26 @@ async function list(r2, prefix) {
 	return objects;
 }
 
-// Get file SHA from GitHub
-async function hash(token, file) {
-	const response = await fetch(`https://api.github.com/repos/${ARCHIVING.STORE.GITHUB.OWNER}/${ARCHIVING.STORE.GITHUB.REPO}/contents/${file}`, {
+// Get owner from GitHub
+async function user(token) {
+	const response = await fetch('https://api.github.com/user', {
 		headers: {
 			'Authorization': `Bearer ${token}`,
 			'User-Agent': 'resonator-archive-worker',
 			'Accept': 'application/vnd.github+json',
 		}
 	});
-	if (response.ok) {
-		const data = await response.json();
-		return data.sha;
-	}
-	return null;
+	return response.ok ? (await response.json()).login : null;
+}
+
+// Get SHA from GitHub
+async function hash(token, owner, path) {
+	const response = await fetch(`https://api.github.com/repos/${owner}/${ARCHIVING.STORE.GITHUB.REPO}/contents/${path}`, {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			'User-Agent': 'resonator-archive-worker',
+			'Accept': 'application/vnd.github+json',
+		}
+	});
+	return response.ok ? (await response.json()).sha : null;
 }
