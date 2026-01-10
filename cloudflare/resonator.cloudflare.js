@@ -556,7 +556,7 @@ export default {
 							branch: ARCHIVING.STORE.GITHUB.BRANCH,
 							...(sha && {sha})
 						})
-					}));
+					}).then(r => (r.body?.cancel(), r)));
 				}				
 				await Promise.all(saves); // Parallel save to R2 and GitHub
 				results.push({date: target, status: 'merged', entries: total});
@@ -699,7 +699,8 @@ async function user(token) {
 			'Accept': 'application/vnd.github+json',
 		}
 	});
-	return response.ok ? (await response.json()).login : null;
+	if (!response.ok) return response.body?.cancel(), null;
+	return (await response.json()).login;
 }
 
 // Get SHA from GitHub
@@ -711,5 +712,6 @@ async function hash(token, owner, path) {
 			'Accept': 'application/vnd.github+json',
 		}
 	});
-	return response.ok ? (await response.json()).sha : null;
+	if (!response.ok) return response.body?.cancel(), null;
+	return (await response.json()).sha;
 }
