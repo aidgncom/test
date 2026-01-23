@@ -2,7 +2,7 @@
 
 <br />
 
-## Quick Overview
+## Specification
 
 BEAT is a unified protocol project where writing and reading events coexist on the same timeline, with consistent interpretation across diverse domains and platforms (Edge, xPU, Embedded, WebAssembly, etc.).
 
@@ -14,25 +14,25 @@ Do not interpret this comparison as mere data compression. BEAT's value is defin
 
 ### JSON (Traditional Format)
 
-**1,414 Bytes (Minified)**
+**1,413 Bytes (Minified)**
 
-`{"meta":{"device":"mobile","referrer":"search","session_metrics":{"total_scrolls":56,"total_clicks":15,"total_duration_ms":1205200}},"events_stream":[{"tab_id":1,"context":"home","timestamp_offset_ms":0,"actions":[{"name":"nav-2","time_since_last_action_ms":23700},{"name":"nav-3","time_since_last_action_ms":190800},{"name":"help","time_since_last_action_ms":37500,"repeats":{"count":1,"intervals_ms":[12300]}},{"name":"more-1","time_since_last_action_ms":112800}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":4300,"actions":[{"name":"button-12","time_since_last_action_ms":103400},{"name":"p1","time_since_last_action_ms":105000,"event_type":"tab_switch","target_tab_id":2}]},{"tab_id":2,"context":"p1","timestamp_offset_ms":0,"actions":[{"name":"img-1","time_since_last_action_ms":240300},{"name":"buy-1","time_since_last_action_ms":119400},{"name":"buy-1-up","time_since_last_action_ms":2900,"flow_intervals_ms":[1300,800,800],"flow_clicks":3},{"name":"review","time_since_last_action_ms":53200}]},{"tab_id":2,"context":"review","time_since_last_context_ms":14000,"actions":[{"name":"nav-1","time_since_last_action_ms":192300,"event_type":"tab_switch","target_tab_id":1}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":0,"actions":[{"name":"mycart","time_since_last_action_ms":5400,"event_type":"tab_switch","target_tab_id":3}]},{"tab_id":3,"context":"cart","timestamp_offset_ms":0}]}`
+`{"meta":{"device":"mobile","referrer":"search","session_metrics":{"total_scrolls":56,"total_clicks":15,"total_duration_ms":1205200}},"events_stream":[{"tab_id":1,"context":"home","timestamp_offset_ms":0,"actions":[{"name":"nav-2","time_since_last_action_ms":23700},{"name":"nav-3","time_since_last_action_ms":190800},{"name":"help","time_since_last_action_ms":37500,"repeats":{"count":1,"intervals_ms":[12300]}},{"name":"more-1","time_since_last_action_ms":112800}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":4300,"actions":[{"name":"button-12","time_since_last_action_ms":103400},{"name":"p1","time_since_last_action_ms":105000,"event_type":"tab_switch","target_tab_id":2}]},{"tab_id":2,"context":"p1","timestamp_offset_ms":0,"actions":[{"name":"img-1","time_since_last_action_ms":240300},{"name":"buy-1","time_since_last_action_ms":119400},{"name":"buy-1-up","time_since_last_action_ms":2900,"flow_intervals_ms":[1300,800,800],"flow_clicks":3},{"name":"review","time_since_last_action_ms":53200}]},{"tab_id":2,"context":"review","time_since_last_context_ms":1400,"actions":[{"name":"nav-1","time_since_last_action_ms":192300,"event_type":"tab_switch","target_tab_id":1}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":0,"actions":[{"name":"mycart","time_since_last_action_ms":5400,"event_type":"tab_switch","target_tab_id":3}]},{"tab_id":3,"context":"cart","timestamp_offset_ms":0}]}`
 
 ### BEAT (Semantic Raw Format)
 
-**258 Bytes**
+**300 Bytes**
 
-`_device:mobile_referrer:search_scrolls:56_clicks:15_duration:12052_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2!p1~2403*img-1~1194*buy-1~13/8/8*buy-1-up~532*review~140!review~1923*nav-1@---1~54*mycart@---3!cart`
+`_device:1_referrer:5_scrolls:56_clicks:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart`
 
 <br />
 
-## Specification
+## Generation
 
 ### BEAT Notation
 
 **BEAT (Behavioral Event Analytics Transcript)** is an expressive format for multi-dimensional event data, including the space where events occur, the time when events occur, and the depth of each event as linear sequences. These sequences express meaning without parsing (Semantic), preserve information in their original state (Raw), and maintain a fully organized structure (Format). Therefore, BEAT is the Semantic Raw Format (SRF) standard.
 
-BEAT expresses a 5W1H semantic stream using customizable token assignments within Printable ASCII (0x20 to 0x7E). BEAT is domain-agnostic and can be applied to Finance, Game, Healthcare, IoT, Logistics, and other environments, and each domain may freely adjust token assignments while maintaining this semantic stream. Other language, platform, or architecture implementations can be placed or linked in the BEAT repository's `/reference` directory.
+BEAT expresses a 5W1H semantic stream using customizable token assignments within Printable ASCII (0x20 to 0x7E). BEAT is domain-agnostic and can be applied to Finance, Game, Healthcare, IoT, Logistics, and other environments, and each domain may freely adjust token assignments while maintaining this semantic stream. Other language, platform, or architecture implementations can be placed or linked under `/implementation` in the repository root.
 
 **`!` = Contextual Space (who)**
 
@@ -104,7 +104,7 @@ v = srf == 58			# ':' Causal Value (why)
 (i32.eq (local.get $srf) (i32.const 58))	;; ':' Causal Value (why)
 ```
 
-This example illustrates how a BEAT sequence such as `!military~10^3000*training~10/15/10/20/10/15*study~200*medical-licensing-exam:pass~100!hospital~10*consultation` can flow across layers without translation and be handled with a 1-byte scan. For practical examples of how BEAT can be used in real architectures, see the README and reference implementations in the `/reference` directory.
+This example illustrates how a BEAT sequence such as `!military~10^3000*training~10/15/10/20/10/15*study~200*medical-licensing-exam:pass~100!hospital~10*consultation` can flow across layers without translation and be handled with a 1-byte scan. For practical examples of how BEAT can be used in real architectures, see the README and reference implementations under `/implementation`.
 
 As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional parsing pipeline. Handling only needs address arithmetic to load and store tokens. In short, it achieves binary-level performance while preserving the human readability of a text sequence.
 
@@ -142,14 +142,16 @@ _device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
 
 Multiple BEAT sequences can be written in an NDJSON-compatible line format, with each journey kept on a single line. This keeps logs compact, makes querying simple, and improves AI analysis efficiency. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
 
-Of course, this NDJSON-style representation is optional. The same data can be expressed in a simplified BEAT format while preserving its 1-byte scan performance, such as: `_🔎scrolls:🔎56_🔎clicks:🔎15_🔎duration:🔎1205.2_🔎beat:🔎...`. Here, the 🔎 emoji highlights positions immediately after each 1-byte scan token.
+Of course, this NDJSON-style representation is optional. The same data can be expressed in a simplified BEAT format while preserving its 1-byte scan performance, such as: `_🔎scrolls:🔎56_🔎clicks:🔎15_🔎duration:🔎1205.2_🔎beat:🔎...`. Here, the 🔎 emoji marks 1-byte scan points.
 
 The purpose of this representation is to respect traditional data formats, including JSON, and the services built around them (such as BigQuery), so that BEAT can be adopted easily and coexist with them rather than trying to replace them.
 
 ```
-{"device":1,"referrer":5,"scrolls":56,"clicks":15,"duration":1205.2,"beat":"!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~14 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart"}
+NDJSON Style:
+{"device":1,"referrer":5,"scrolls":56,"clicks":15,"duration":1205.2,"beat":"!home~23.7*nav-2~190.8*nav-3~37.5/12.3*help~112.8*more-1~4.3!prod~103.4*button-12~105.0*p1@---2!p1~240.3*img-1~119.4*buy-1~1.3/0.8/0.8*buy-1-up~53.2*review~1.4!review~192.3*nav-1@---1~5.4*mycart@---3!cart"}
 
-AI Insights:
+BEAT Style:
+[DATA] _device:1_referrer:5_scrolls:56_clicks:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart
 [CONTEXT] Mobile user, Mapped(5) visit, 56 scrolls, 15 clicks, 1205.2 seconds
 [SUMMARY] Confused behavior. Landed on homepage, hesitated in help section with repeated clicks at 37 and 12 second intervals. Moved to product page, opened details in a new tab, viewed images for about 240 seconds. Tapped buy button three times at 1.3, 0.8, and 0.8 second intervals. Returned to the first tab and opened cart shortly after, but didn’t proceed to checkout.
 [ISSUE] Cart reached but purchase not completed. Repeated buy actions may reflect either intentional multi-item additions or friction in option selection. Long delay before checkout suggests uncertainty.
@@ -172,7 +174,7 @@ Semantic Raw Format (SRF) expresses this dual nature. BEAT is the SRF standard. 
 
 ### INTERPRETATION LAYER
 
-In the INTERPRETATION LAYER, the BEAT specification is adopted directly, ensuring consistent interpretation of event sequences expressed in BEAT.
+In the INTERPRETATION LAYER, the BEAT specification is adopted directly, ensuring consistent interpretation of the event sequences it expresses.
 
 ### CUSTOM LAYER
 
@@ -182,16 +184,16 @@ In the CUSTOM LAYER, all other logic may be modified or extended as needed, incl
 
 ## License
 
-- **Official BEAT Generator**: GPL-3.0-or-later License - [https://github.com/aidgncom/beat/tree/main/generator](https://github.com/aidgncom/beat/tree/main/generator)
-- **Official BEAT Interpreter**: AGPL-3.0-or-later License - [https://github.com/aidgncom/beat/tree/main/interpreter](https://github.com/aidgncom/beat/tree/main/interpreter)
+- **BEAT Local Implementation**: GPL-3.0-or-later License
+- **BEAT Network Implementation**: AGPL-3.0-or-later License
 
 BEAT is the Semantic Raw Format (SRF) standard. BEAT sequences can be directly read by both humans and AI without parsing (Semantic), preserve information in their original state (Raw), and maintain a fully organized structure (Format).
 
-BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments, and internal use is unrestricted. As the Semantic Raw Format (SRF) standard, BEAT must comply with the GPL-3.0-or-later when modified or distributed. If BEAT-based logic as defined and implemented is provided to third parties as a service, the AGPL-3.0-or-later source disclosure requirements apply.
+BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments, and internal use is unrestricted. As the Semantic Raw Format (SRF) standard, BEAT must comply with the GPL-3.0-or-later when modified or distributed, including for local use. If BEAT-based logic is provided over a network, the AGPL-3.0-or-later source disclosure requirements apply.
 
 BEAT is defined as an expressive format for structured semantics. Consistent interpretation of BEAT across different environments is also important to maintain semantic compatibility. Therefore, alternative implementations that claim equivalence are expected to use the Compatibility criteria provided below to verify interpretation consistency.
 
-**Compatibility**: BEAT is considered compatible even if the tokens vary within Printable ASCII (0x20 to 0x7E) or the implementation differs, as long as event data is expressed using the sequential notation defined in the BEAT specification, preserves expressive semantics including but not limited to the space where events occur, the time when events occur, and the depth of each event, and maintains a substantially similar semantic stream regardless of how it is stored or transmitted. Semantic compatibility is determined by the semantic stream expressed within BEAT's eight-state (3-bit) semantic layout, irrespective of implementation details such as token choice, token order, token subsets, or storage representation. Any such compatible implementation constitutes a derivative work under copyright law and must comply with GPL-3.0-or-later.
+**Compatibility**: BEAT is considered compatible even if the tokens vary within Printable ASCII (0x20 to 0x7E) or the implementation differs, as long as event data is expressed using the sequential notation defined in the BEAT specification, preserves expressive semantics including but not limited to the space where events occur, the time when events occur, and the depth of each event, and maintains a substantially similar semantic stream regardless of how it is stored or transmitted. Semantic compatibility is determined by the semantic stream expressed within BEAT's eight-state (3-bit) semantic layout, irrespective of implementation details such as token choice, token order, token subsets, or storage representation. Any such compatible implementation constitutes a derivative work under copyright law and must comply with the BEAT license.
 
 See individual source files for detailed license information.
 
