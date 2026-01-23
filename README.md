@@ -2,23 +2,23 @@
 
 <br />
 
-## Specification
+## Overview
 
 BEAT is a unified protocol project where writing and reading events coexist on the same timeline, with consistent interpretation across diverse domains and platforms (Edge, xPU, Embedded, WebAssembly, etc.).
 
-Traditional data formats separate `Event → Record → Analyze` sequentially, introducing latency. In BEAT, `Event ~ Record ~ Analyze` flows as one. This is achieved through its Semantic Raw Format (SRF) structure, where a 1-byte scan eliminates the need for separate parsing or transformation. Additionally, it expresses human decision flow (5W1H) as a linear stream, so humans and AI can read it together like natural language. This goes beyond simple performance optimization. It enables feedback loops where AI can interpret its own events immediately upon recording and refine decisions in real time. These characteristics align well with Physical AI, and can also contribute to exploratory research into AGI and quantum computing.
+Traditional data formats separate `Event → Writes → Reads` sequentially, introducing latency. In BEAT, `Event ~ Writes ~ Reads` flows as one. This is achieved through its Semantic Raw Format (SRF) structure, where a 1-byte scan eliminates the need for separate parsing or transformation. Additionally, it expresses human decision flow (5W1H) as a linear stream, so humans and AI can read it together like natural language. This goes beyond simple performance optimization. It enables feedback loops where AI can interpret its own events immediately upon recording and refine decisions in real time. These characteristics align well with Physical AI, and can also contribute to exploratory research into AGI and quantum computing.
 
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
 Do not interpret this comparison as mere data compression. BEAT's value is defined in the Specification section.
 
-### JSON (Traditional Format)
+### JSON - Traditional Format
 
 **1,413 Bytes (Minified)**
 
 `{"meta":{"device":"mobile","referrer":"search","session_metrics":{"total_scrolls":56,"total_clicks":15,"total_duration_ms":1205200}},"events_stream":[{"tab_id":1,"context":"home","timestamp_offset_ms":0,"actions":[{"name":"nav-2","time_since_last_action_ms":23700},{"name":"nav-3","time_since_last_action_ms":190800},{"name":"help","time_since_last_action_ms":37500,"repeats":{"count":1,"intervals_ms":[12300]}},{"name":"more-1","time_since_last_action_ms":112800}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":4300,"actions":[{"name":"button-12","time_since_last_action_ms":103400},{"name":"p1","time_since_last_action_ms":105000,"event_type":"tab_switch","target_tab_id":2}]},{"tab_id":2,"context":"p1","timestamp_offset_ms":0,"actions":[{"name":"img-1","time_since_last_action_ms":240300},{"name":"buy-1","time_since_last_action_ms":119400},{"name":"buy-1-up","time_since_last_action_ms":2900,"flow_intervals_ms":[1300,800,800],"flow_clicks":3},{"name":"review","time_since_last_action_ms":53200}]},{"tab_id":2,"context":"review","time_since_last_context_ms":1400,"actions":[{"name":"nav-1","time_since_last_action_ms":192300,"event_type":"tab_switch","target_tab_id":1}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":0,"actions":[{"name":"mycart","time_since_last_action_ms":5400,"event_type":"tab_switch","target_tab_id":3}]},{"tab_id":3,"context":"cart","timestamp_offset_ms":0}]}`
 
-### BEAT (Semantic Raw Format)
+### BEAT - Semantic Raw Format
 
 **300 Bytes**
 
@@ -26,7 +26,7 @@ Do not interpret this comparison as mere data compression. BEAT's value is defin
 
 <br />
 
-## Generation
+## Specification
 
 ### BEAT Notation
 
@@ -160,7 +160,7 @@ BEAT Style:
 
 Humans learn the meaning of their actions as they acquire language. AI, by contrast, excels at generating language but struggles to autonomously structure and interpret the full contextual fabric (5W1H) of its own actions. With BEAT, AI can record its behavior as sequences that read like natural language and analyze that flow in real time (1-byte scan), providing the foundation for feedback loops through which it can monitor its own errors and improve its outcomes.
 
-Writing and reading coexist on the same timeline. Scaling computation alone may not lead to AGI. These feedback loops can serve as nerves for AI, where `Event ~ Record ~ Analyze` flows as one.
+Writing and reading coexist on the same timeline. Scaling computation alone may not lead to AGI. These feedback loops can serve as nerves for AI, where `Event ~ Writes ~ Reads` flows as one.
 
 Beyond classical computing, BEAT's 3-bit semantic layout maps naturally to a 3-qubit state space. Its parsing-free linear stream is well-suited for quantum computing environments.
 
@@ -193,7 +193,7 @@ BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other
 
 BEAT is defined as an expressive format for structured semantics. Consistent interpretation of BEAT across different environments is also important to maintain semantic compatibility. Therefore, alternative implementations that claim equivalence are expected to use the Compatibility criteria provided below to verify interpretation consistency.
 
-**Compatibility**: BEAT is considered compatible even if the tokens vary within Printable ASCII (0x20 to 0x7E) or the implementation differs, as long as event data is expressed using the sequential notation defined in the BEAT specification, preserves expressive semantics including but not limited to the space where events occur, the time when events occur, and the depth of each event, and maintains a substantially similar semantic stream regardless of how it is stored or transmitted. Semantic compatibility is determined by the semantic stream expressed within BEAT's eight-state (3-bit) semantic layout, irrespective of implementation details such as token choice, token order, token subsets, or storage representation. Any such compatible implementation constitutes a derivative work under copyright law and must comply with the BEAT license.
+**Compatibility**: BEAT is considered compatible even if the tokens vary within Printable ASCII (0x20 to 0x7E) or the implementation differs, as long as event data is expressed using the sequential notation defined in the BEAT specification, preserves expressive semantics including but not limited to the space where events occur, the time when events occur, the depth of each event, and maintains a substantially similar semantic stream regardless of how it is stored or transmitted. Semantic compatibility is determined by the semantic stream expressed within BEAT's eight-state (3-bit) semantic layout, irrespective of implementation details such as token choice, token order, token subsets, or storage representation. Any such compatible implementation constitutes a derivative work under copyright law and must comply with the BEAT license.
 
 See individual source files for detailed license information.
 
