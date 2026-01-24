@@ -189,7 +189,7 @@ In the CUSTOM LAYER, all other logic may be modified or extended as needed, incl
 
 BEAT is the Semantic Raw Format (SRF) standard. BEAT sequences can be directly read by both humans and AI without parsing (Semantic), preserve information in their original state (Raw), and maintain a fully organized structure (Format).
 
-BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments, and internal use is unrestricted. As the Semantic Raw Format (SRF) standard, BEAT must comply with the GPL-3.0-or-later when modified or distributed, including for local use. If BEAT-based logic is provided over a network, the AGPL-3.0-or-later source disclosure requirements apply.
+BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments, and internal use is unrestricted. **BEAT Local Implementations** use GPL-3.0-or-later when modified or distributed, allowing integration in any environment including SSR or game servers without extending copyleft to backend code. **BEAT Network Implementations** use AGPL-3.0-or-later, ensuring source sharing when BEAT-based logic is provided over a network like SaaS.
 
 BEAT is defined as an expressive format for structured semantics. Consistent interpretation of BEAT across different environments is also important to maintain semantic compatibility. Therefore, alternative implementations that claim equivalence are expected to use the Compatibility criteria provided below to verify interpretation consistency.
 
