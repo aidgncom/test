@@ -174,11 +174,11 @@ Semantic Raw Format (SRF) expresses this dual nature. BEAT is the SRF standard. 
 
 ### INTERPRETATION LAYER
 
-In the INTERPRETATION LAYER, the BEAT specification is adopted directly, ensuring consistent interpretation of the event sequences it expresses.
+In the **INTERPRETATION LAYER**, the BEAT specification is adopted directly, ensuring consistent interpretation of the event sequences it expresses.
 
 ### CUSTOM LAYER
 
-In the CUSTOM LAYER, all other logic may be modified or extended as needed, including but not limited to control flow, routing, resource management, output policy, AI components, analytics, security, and domain-specific strategies.
+In the **CUSTOM LAYER**, all other logic may be modified or extended as needed, including but not limited to control flow, routing, resource management, output policy, AI components, analytics, security, and domain-specific strategies.
 
 <br />
 
