@@ -170,7 +170,7 @@ Beyond classical computing, BEAT's 3-bit semantic layout maps naturally to a 3-q
 
 BEAT is a data format because it defines a linear event stream using semantic states. It is also a protocol because those same states enable consistent interpretation across diverse domains and platforms, while supporting real-time streaming where readers can scan bytes as they arrive.
 
-Semantic Raw Format (SRF) expresses this dual nature. BEAT is the SRF standard. Therefore, consistent interpretation of BEAT across different environments is important to maintain semantic compatibility.
+Semantic Raw Format (SRF) expresses this dual nature. BEAT is the SRF standard and also has potential as a World Models Language. Therefore, consistent interpretation of BEAT across different environments is important to maintain semantic compatibility.
 
 ### INTERPRETATION LAYER
 
