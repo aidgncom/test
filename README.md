@@ -48,11 +48,11 @@ BEAT expresses a 5W1H semantic stream using customizable token assignments withi
 
 BEAT achieves binary-level (1-byte scan) performance while preserving the human readability of a text sequence. BEAT defines six core tokens within an eight-state (3-bit) semantic layout. Aligned with 5W1H, they fully capture the intent of human-designed architectures while leaving two states for domain-specific extensions. Together, they form the core notation of the BEAT format.
 
-The underscore (_) is one example of an extension token used for serialization and to express meta fields, such as `_device:mobile_referrer:search_beat:!page~10*button:small~15*menu`. These meta fields annotate BEAT sequences without altering their core format while preserving 1-byte scan performance.
+The underscore `_` is one example of an extension token used for serialization and to express meta fields, such as `_device:mobile_referrer:search_beat:!page~10*button:small~15*menu`. These meta fields annotate BEAT sequences without altering their core format while preserving 1-byte scan performance.
 
-In Web domains such as Full Score, the at sign (@) is used as an extension token. It links multiple BEAT sequences, including cross-tab transitions. Extension tokens can be used in a similar way for app instances, device clusters, or any other parallel sequences in other domains.
+In Web domains such as Full Score, the at sign `@` is used as an extension token. It links multiple BEAT sequences, including cross-tab transitions. Extension tokens can be used in a similar way for app instances, device clusters, or any other parallel sequences in other domains.
 
-Hyphens (-) and spaces ( ) are generally not treated as extension states and can be used freely as flexible bind markers.
+Hyphens `-` and spaces ` ` are generally not treated as extension states and can be used freely as flexible bind markers.
 
 ### BEAT Layout
 
