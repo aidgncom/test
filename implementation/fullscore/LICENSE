@@ -1,0 +1,5 @@
+BEAT Local Implementation: GPL-3.0-or-later (browser/LICENSE)
+BEAT Network Implementation: AGPL-3.0-or-later (edge/LICENSE)
+
+Each implementation may combine BEAT with independently licensed components. See subdirectory LICENSE files or source code headers for details.
+BEAT license terms and compatibility obligations are defined in the repository root and follow the applicable GPL-3.0-or-later or AGPL-3.0-or-later. GitHub Repo: https://github.com/aidgncom/beat
