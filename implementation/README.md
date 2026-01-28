@@ -56,7 +56,7 @@ For additional detail, BEAT can be extended with value parameters like `!JFK:pil
 
 ### Applications Across Platforms
 
-BEAT can also be handled natively on AI Accelerators (xPU). As a Semantic Raw Format with an eight-state semantic layout, BEAT is inherently optimized for massive parallel handling and large-scale AI training. Below is an example Triton kernel that encodes BEAT tokens directly in xPU memory.
+BEAT can also be handled natively on AI Accelerators (xPU). BEAT is the Semantic Raw Format (SRF) standard, and its 1-byte scan performance makes it inherently optimized for massive parallel handling and large-scale AI training. Below is an example Triton kernel that encodes BEAT tokens directly in xPU memory.
 
 **xPU platform example** `1-byte scan`
 ```python
