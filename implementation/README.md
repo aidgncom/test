@@ -1,8 +1,6 @@
 # BEAT implementation
 
-This directory is reserved for implementations of BEAT. Implementations placed here serve as reference examples of how BEAT may be used in different environments.
-
-The authoritative definition of BEAT and its eight-state semantic layout is in the repository root README. Implementations in this directory must preserve the same semantic stream for any BEAT sequence.
+This directory is reserved for implementations of BEAT. Implementations placed here serve as reference examples of how BEAT may be used in different environments. The authoritative definition of BEAT is in the repository root README. Implementations in this directory must preserve a substantially similar semantic stream for any BEAT sequence.
 
 BEAT license terms and compatibility obligations are defined in the repository root and follow the applicable GPL-3.0-or-later or AGPL-3.0-or-later. GitHub Repo: [https://github.com/aidgncom/beat](https://github.com/aidgncom/beat)
 
@@ -52,9 +50,7 @@ _flight-2:!JFK~2046*load~864*depart~462*climb~8424*cruise!MEM~872*ramp-hold:grou
 
 Here's a more intuitive way to see BEAT's benefits in the logistics domain.
 
-BEAT can stream the entire daily schedule of a single aircraft in about 1KB of data. There are roughly 30,000 commercial aircraft in service worldwide. Archived for one year, all of that can fit on a 10GB USB drive.
-
-On that drive, all key flight events from the first takeoff to the final landing of each aircraft are preserved in a form that requires no semantic parsing. It also reveals delay reasons and behavioral patterns that traditional tools often hide across separate logs.
+BEAT can stream the entire daily schedule of a single aircraft in about 1KB of data. There are roughly 30,000 commercial aircraft in service worldwide. Archived for one year, all of that can fit on a 10GB USB drive. On that drive, all key flight events from the first takeoff to the final landing of each aircraft are preserved in a form that requires no semantic parsing. It also reveals delay reasons and behavioral patterns that traditional tools often hide across separate logs.
 
 For additional detail, BEAT can be extended with value parameters like `!JFK:pilot-LIC12345` or `*depart:fuel-42350L`, maintaining readability while adding precision.
 
