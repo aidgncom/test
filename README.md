@@ -28,8 +28,6 @@ BEAT: Bytes ~ 1-byte scan → Handling
 
 **3. Predictability & Security (Depth)**: O(n) worst-case guaranteed. No recursion, no backtracking. Execution never stalls regardless of input. This makes ReDoS and similar complexity attacks structurally impossible.
 
-<br />
-
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
 Do not interpret this comparison as mere data compression. BEAT's value is defined in the Specification section.
