@@ -10,6 +10,12 @@ Traditional data formats separate `Event → Writes → Reads` sequentially, int
 
 The result is as follows.
 
+**1. Zero-Allocation Stability (Space)**: No intermediate objects, parsing trees, or temporary structures are created, keeping memory allocation and GC intervention near zero. Latency does not accumulate under traffic spikes, and performance stays stable across environments.
+
+**2. Maximizing Engine Potential (Time)**: The CPU simply scans contiguous bytes, driving cache locality to the extreme. Execution speed pushes to the limits of the environment itself. Conventional formats and regex-based handling cannot reach this territory. It only becomes possible when 1-byte scanning is assumed from the start.
+
+**3. Predictability & Security (Depth)**: Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
+
 ```
 Traditional Parsing: Bytes → Tokenization → Parsing → Tree Construction (Memory) → Field Mapping (CPU) → Value Extraction → Handling
 ⛔ 7 Steps, μs to ms-level overhead (varies by payload)
@@ -21,18 +27,6 @@ BEAT: Bytes ~ 1-byte scan → Handling
 # No Parsing
 # No Tree & Object Allocation
 ```
-
-**1. Zero-Allocation Stability (Space)**: No intermediate objects, parsing trees, or temporary structures are created, keeping memory allocation and GC intervention near zero. Latency does not accumulate under traffic spikes, and performance stays stable across environments.
-
-**2. Maximizing Engine Potential (Time)**: The CPU simply scans contiguous bytes, driving cache locality to the extreme. Execution speed pushes to the limits of the environment itself. Conventional formats and regex-based handling cannot reach this territory. It only becomes possible when 1-byte scanning is assumed from the start.
-
-**3. Predictability & Security (Depth)**: Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
-
-<br />
-
----
-
-<br />
 
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
