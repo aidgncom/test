@@ -22,11 +22,13 @@ BEAT: Bytes ~ 1-byte scan → Handling
 # No Tree & Object Allocation
 ```
 
-**1. Zero-Allocation Stability (Space)**: No intermediate objects, parsing trees, or temporary structures are created, keeping memory allocation and GC intervention near zero. Latency does not accumulate under traffic spikes, and performance stays stable across environments.
+**1. Zero-Allocation Stability (Space)**: 0 allocations per event. No parsing trees, no intermediate objects, no GC pressure. Events can be processed as they arrive, with no buffering required. Latency remains constant under load and stable across environments.
 
-**2. Maximizing Engine Potential (Time)**: The CPU simply scans contiguous bytes, driving cache locality to the extreme. Execution speed pushes to the limits of the environment itself. Conventional formats and regex-based handling cannot reach this territory. It only becomes possible when 1-byte scanning is assumed from the start.
+**2. Maximizing Engine Potential (Time)**: 1-byte scan over contiguous memory. No tokenization, no parsing overhead. The CPU walks each byte in sequence, achieving high cache locality. This reaches memory-bound throughput, a territory unreachable by conventional formats or regex-based parsing. It only becomes possible when 1-byte scanning is assumed from the start.
 
-**3. Predictability & Security (Depth)**: Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
+**3. Predictability & Security (Depth)**: O(n) worst-case guaranteed. No recursion, no backtracking. Execution never stalls regardless of input. This makes ReDoS and similar complexity attacks structurally impossible.
+
+<br />
 
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
