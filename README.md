@@ -8,14 +8,25 @@ BEAT is a unified protocol project where writing and reading events coexist on t
 
 Traditional data formats separate `Event → Writes → Reads` sequentially, introducing latency. In BEAT, `Event ~ Writes ~ Reads` flows as one. This is achieved through its Semantic Raw Format (SRF) structure, where a 1-byte scan eliminates the need for separate parsing or transformation. Additionally, it expresses human decision flow (5W1H) as a linear stream, so humans and AI can read it together like natural language. This goes beyond simple performance optimization. It enables feedback loops where AI can interpret its own events immediately upon recording and refine decisions in real time. These characteristics align well with Physical AI, Agentic AI, and World Models. They can also contribute to exploratory research into AGI and quantum computing.
 
-**1. Zero-Allocation Stability (Space)**:
-No intermediate objects, parsing trees, or temporary structures are created, keeping memory allocation and GC intervention near zero. Latency does not accumulate under traffic spikes, and performance stays stable across environments.
+The result is as follows.
 
-**2. Maximizing Engine Potential (Time)**:
-The CPU simply scans contiguous bytes, driving cache locality to the extreme. Execution speed pushes to the limits of the environment itself. Conventional formats and regex-based handling cannot reach this territory. It only becomes possible when 1-byte scanning is assumed from the start.
+```
+Traditional Parsing: Bytes → Tokenization → Parsing → Tree Construction (Memory) → Field Mapping (CPU) → Value Extraction → Handling
+⛔ 7 Steps, μs to ms-level overhead (varies by payload)
 
-**3. Predictability & Security (Depth)**:
-Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
+BEAT: Bytes ~ 1-byte scan → Handling
+✅ 2 Steps, μs-level overhead
+
+# No Tokenization
+# No Parsing
+# No Tree & Object Allocation
+```
+
+**1. Zero-Allocation Stability (Space)**: No intermediate objects, parsing trees, or temporary structures are created, keeping memory allocation and GC intervention near zero. Latency does not accumulate under traffic spikes, and performance stays stable across environments.
+
+**2. Maximizing Engine Potential (Time)**: The CPU simply scans contiguous bytes, driving cache locality to the extreme. Execution speed pushes to the limits of the environment itself. Conventional formats and regex-based handling cannot reach this territory. It only becomes possible when 1-byte scanning is assumed from the start.
+
+**3. Predictability & Security (Depth)**: Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
 
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
@@ -116,20 +127,6 @@ v = srf == 58			# ':' Causal Value (why)
 This example illustrates how a BEAT sequence such as `!military~10^3000*training~10/15/10/20/10/15*study~200*medical-licensing-exam:pass~100!hospital~10*consultation` can flow across layers without translation and be handled with a 1-byte scan. For practical examples of how BEAT can be used in real architectures, see the README and reference implementations under `/implementation`.
 
 As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional parsing pipeline. Handling only needs address arithmetic to load and store tokens. In short, it achieves binary-level performance while preserving the human readability of a text sequence.
-
-The result is as follows.
-
-```
-Traditional Parsing: Bytes → Tokenization → Parsing → Tree Construction (Memory) → Field Mapping (CPU) → Value Extraction → Handling
-⛔ 7 Steps, μs to ms-level overhead (varies by payload)
-
-BEAT: Bytes ~ 1-byte scan → Handling
-✅ 2 Steps, μs-level overhead
-
-# No Tokenization
-# No Parsing
-# No Tree & Object Allocation
-```
 
 ### BEAT Architecture
 
