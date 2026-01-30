@@ -28,6 +28,8 @@ BEAT: Bytes ~ 1-byte scan → Handling
 
 **3. Predictability & Security (Depth)**: Execution time stays predictable regardless of input, and execution itself never stalls, even under ReDoS-style malicious payloads. Because 1-byte scanning eliminates nested parsing and backtracking, performance collapse is structurally impossible.
 
+---
+
 The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
 Do not interpret this comparison as mere data compression. BEAT's value is defined in the Specification section.
