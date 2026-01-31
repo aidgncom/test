@@ -4,7 +4,7 @@
 
 ## Overview
 
-BEAT is a unified protocol project where writing and reading events coexist on the same timeline, with consistent interpretation across diverse domains and platforms (Edge, xPU, Embedded, WebAssembly, etc.).
+BEAT is a unified protocol where writing and reading events coexist on the same timeline, with consistent interpretation across diverse domains and platforms (Edge, xPU, Embedded, WebAssembly, etc.).
 
 Traditional data formats separate `Event → Writes → Reads` sequentially, introducing latency. In BEAT, `Event ~ Writes ~ Reads` flows as one. This is achieved through its Semantic Raw Format (SRF) structure, where a 1-byte scan eliminates the need for separate parsing or transformation. Additionally, it expresses human decision flow (5W1H) as a linear stream, so humans and AI can read it together like natural language. This goes beyond simple performance optimization. It enables feedback loops where AI can interpret its own events immediately upon recording and refine decisions in real time. These characteristics align well with Physical AI, Agentic AI, and World Models. They can also contribute to exploratory research into AGI and quantum computing.
 
@@ -22,7 +22,7 @@ BEAT: Bytes ~ 1-byte scan → Handling
 # No Tree & Object Allocation
 ```
 
-**1. Zero-Allocation Stability (Space)**: 0 allocations per event. No parsing trees, no intermediate objects, no GC pressure. Events can be processed as they arrive, with no buffering required. Latency remains constant under load and stable across environments.
+**1. Zero-Allocation Stability (Space)**: 0 allocations per event. No parsing trees, no intermediate objects, no GC pressure. Events can be handled as they arrive, with no buffering required. Latency remains constant under load and stable across environments.
 
 **2. Maximizing Engine Potential (Time)**: 1-byte scan over contiguous memory. No tokenization, no parsing overhead. The CPU walks each byte in sequence, achieving high cache locality. This reaches memory-bound throughput, a territory unreachable by conventional formats or regex-based parsing. It only becomes possible when 1-byte scanning is assumed from the start.
 
@@ -32,7 +32,7 @@ BEAT: Bytes ~ 1-byte scan → Handling
 
 ## Example
 
-The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the structural limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
+The JSON example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the semantic limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
 Do not interpret this comparison as mere data compression. BEAT's value is defined in the Specification section.
 
@@ -56,7 +56,7 @@ Do not interpret this comparison as mere data compression. BEAT's value is defin
 
 **BEAT (Behavioral Event Analytics Transcript)** is an expressive format for multi-dimensional event data, including the space where events occur, the time when events occur, and the depth of each event as linear sequences. These sequences express meaning without parsing (Semantic), preserve information in their original state (Raw), and maintain a fully organized structure (Format). Therefore, BEAT is the Semantic Raw Format (SRF) standard.
 
-BEAT expresses a 5W1H semantic stream using customizable token assignments within Printable ASCII (0x20 to 0x7E). BEAT is domain-agnostic and can be applied to Finance, Game, Healthcare, IoT, Logistics, and other environments, and each domain may freely adjust token assignments while maintaining this semantic stream. Other language, platform, or architecture implementations can be placed or linked under `/implementation` in the repository root.
+BEAT expresses a 5W1H semantic stream using customizable token assignments within Printable ASCII (0x20 to 0x7E). BEAT is domain-agnostic and can be applied to Finance, Game, Healthcare, IoT, Logistics, and other environments. Each domain may freely adjust token assignments while maintaining this semantic stream. Other language, platform, or architecture implementations can be placed or linked under `/implementation` in the repository root.
 
 **`!` = Contextual Space (who)**
 
@@ -74,7 +74,7 @@ BEAT achieves binary-level (1-byte scan) performance while preserving the human 
 
 The underscore `_` is one example of an extension token used for serialization and to express meta fields, such as `_device:mobile_referrer:search_beat:!page~10*button:small~15*menu`. These meta fields annotate BEAT sequences without altering their core format while preserving 1-byte scan performance.
 
-In Web domains such as Full Score, the at sign `@` is used as an extension token. It links multiple BEAT sequences, including cross-tab transitions. Extension tokens can be used in a similar way for app instances, device clusters, or any other parallel sequences in other domains.
+In implementations such as Web Advaiser, the at sign `@` is used as an extension token. It links multiple BEAT sequences, including cross-tab transitions. Extension tokens can be used in a similar way for app instances, device clusters, or any other parallel sequences in other domains.
 
 Hyphens `-` and spaces ` ` are generally not treated as extension states and can be used freely as flexible bind markers.
 
@@ -82,7 +82,7 @@ Hyphens `-` and spaces ` ` are generally not treated as extension states and can
 
 The eight-state semantic layout defines a structural constraint of the BEAT specification. To maximize expressive power, BEAT is designed so that all 2^3 states can be used. As a result, the semantic stream can be scanned efficiently across both classical and quantum computing environments.
 
-The 3-bit (2^3) state layout is simply a design chosen in light of various trade-offs, and an implementation that uses BEAT, such as Full Score, can, for example, choose a Power Mode (POW) that uses only a 2-bit subset of the eight states, gaining simpler immediate batching at the cost of accepting fragmented streams. Conversely, expanding BEAT's states to 4 bits increases expressive power, but also carries the possibility that constraints become looser, the format becomes unwieldy, and it becomes harder to maintain semantic discipline. Accordingly, BEAT will continue to evolve through ongoing research and refinement aimed at reducing these trade-offs, even when the number of states is reduced or increased.
+The 3-bit (2^3) state layout is simply a design chosen in light of various trade-offs, and implementations such as Web Advaiser can choose a Power Mode (POW) that uses only a 2-bit subset of the eight states, gaining simpler immediate batching at the cost of accepting fragmented streams. Conversely, expanding BEAT's states to 4 bits increases expressive power, but also carries the possibility that constraints become looser, the format becomes unwieldy, and it becomes harder to maintain semantic discipline. Accordingly, BEAT will continue to evolve through ongoing research and refinement aimed at reducing these trade-offs, even when the number of states is reduced or increased.
 
 BEAT's semantic stream remains substantially similar regardless of token assignment or how data is stored or transmitted, provided implementations follow BEAT's eight-state semantic layout. See the Compatibility criteria in the License section.
 
@@ -152,7 +152,7 @@ _device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
 
 Multiple BEAT sequences can be written in an NDJSON-compatible line format, with each journey kept on a single line. This keeps logs compact, makes querying simple, and improves AI analysis efficiency. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
 
-Of course, this NDJSON-style representation is optional. The same data can be expressed in a simplified BEAT format while preserving its 1-byte scan performance, such as: `_🔎scrolls:🔎56_🔎clicks:🔎15_🔎duration:🔎1205.2_🔎beat:🔎...`. Here, the 🔎 emoji marks 1-byte scan points.
+Of course, this NDJSON-style representation is optional. The same data can be expressed in a simplified BEAT format while preserving its 1-byte scan performance, such as: `_scrolls:56_clicks:15_duration:1205.2_beat:...`.
 
 The purpose of this representation is to respect traditional data formats, including JSON, and the services built around them (such as BigQuery), so that BEAT can be adopted easily and coexist with them rather than trying to replace them.
 
@@ -199,7 +199,7 @@ In the **CUSTOM LAYER**, all other logic may be modified or extended as needed, 
 
 BEAT is the Semantic Raw Format (SRF) standard. BEAT sequences can be directly read by both humans and AI without parsing (Semantic), preserve information in their original state (Raw), and maintain a fully organized structure (Format).
 
-BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments, and internal use is unrestricted. **BEAT Local Implementations** use GPL-3.0-or-later when modified or distributed, allowing integration in any environment including SSR or game servers without extending copyleft to backend code. **BEAT Network Implementations** use AGPL-3.0-or-later, ensuring source sharing when BEAT-based logic is provided over a network like SaaS.
+BEAT license applies across Finance, Game, Healthcare, IoT, Logistics, and other environments. Internal use is unrestricted. **BEAT Local Implementations** use GPL-3.0-or-later when modified or distributed, allowing integration in any environment including SSR or game servers without extending copyleft to backend code. **BEAT Network Implementations** use AGPL-3.0-or-later, ensuring source sharing when BEAT-based logic is provided over a network like SaaS.
 
 BEAT is defined as an expressive format for structured semantics. Consistent interpretation of BEAT across different environments is also important to maintain semantic compatibility. Therefore, alternative implementations that claim equivalence are expected to use the Compatibility criteria provided below to verify interpretation consistency.
 
