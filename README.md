@@ -134,7 +134,7 @@ As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional 
 
 ### BEAT Architecture
 
-Traditional data formats are like dots. They're great for organizing and separating individual events, but understanding what story they tell requires parsing and interpretation.
+Traditional data formats are like dots. They're great for organizing and separating individual events, but understanding what story they tell requires parsing and interpretation. When events are stored across separate fields, as in JSON, making sense of the full context means stitching scattered pieces back together.
 
 BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away.
 
@@ -144,7 +144,7 @@ _device:1_referrer:1_scrolls:24_clicks:7_duration:11993_beat:!p1~2403*img-1~1194
 _device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
 ```
 
-When events are stored across separate fields, as in JSON, understanding the full context means stitching scattered pieces back together. A BEAT sequence captures a complete journey on a single line at the moment it unfolds, the way a memory naturally surfaces as one continuous flow rather than disconnected fragments. And as that continuous flow stacks line by line, it grows the way another memory stacks neatly upon an associated existing one. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
+A BEAT sequence captures a complete journey on a single line at the moment it unfolds, the way a memory naturally surfaces as one continuous flow rather than disconnected fragments. And as that continuous flow stacks line by line, it grows the way another memory stacks neatly upon an associated existing one. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
 
 BEAT expresses its semantic states using only Printable ASCII (0x20 to 0x7E) tokens that pass smoothly through compute and security layers. No separate encoding or decoding is required, and because it's small enough to live in native storage, real-time analysis runs without delay across most environments.
 
