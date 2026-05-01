@@ -32,7 +32,7 @@ BEAT: Bytes ~ 1-byte scan → Handling
 
 ## Example
 
-The example below is not meant to claim superiority over other formats, but to illustrate BEAT's structural characteristics. It reaches compression near the semantic limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
+The example below is not meant to claim BEAT's superiority over other formats, but to illustrate its structural characteristics. It reaches compression near the semantic limit while preserving the causal story (Semantic) and event visibility that can be harder to follow in traditional formats. BEAT is designed to coexist with and respect the value of standard formats like JSON.
 
 Do not interpret this comparison as mere data compression. BEAT's value is defined in the Specification section.
 
