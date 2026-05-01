@@ -26,7 +26,7 @@ BEAT: Bytes ~ 1-byte scan → Handling
 
 **2. Maximizing Engine Potential (Time)**: 1-byte scan over contiguous memory. No tokenization, no parsing overhead. The CPU walks each byte in sequence, achieving high cache locality. This reaches memory-bound throughput, a territory unreachable by conventional formats or regex-based parsing. It only becomes possible when 1-byte scanning is assumed from the start.
 
-**3. Predictability & Security (Depth)**: O(n) worst-case guaranteed. No recursion, no backtracking. Execution never stalls regardless of input. This makes ReDoS and similar complexity attacks structurally impossible.
+**3. Predictability & Security (Depth)**: O(n) worst-case guaranteed with deterministic latency. No recursion, no backtracking. Execution never stalls regardless of input. This makes complexity attacks like ReDoS structurally impossible.
 
 <br />
 
