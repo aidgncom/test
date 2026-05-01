@@ -136,7 +136,7 @@ As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional 
 
 Traditional data formats, such as JSON, are like dots. They organize individual events well, but understanding what story they tell requires parsing and interpretation. That's why traditional approaches demand heavy data pipelines and massive infrastructure.
 
-BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away.
+BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away. It dramatically reduces the need for heavy data pipelines and massive infrastructure. It can even eliminate them entirely.
 
 ```
 _device:1_referrer:5_scrolls:32_clicks:8_duration:12047_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2~54*mycart@---3
