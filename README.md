@@ -134,9 +134,17 @@ As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional 
 
 ### BEAT Architecture
 
-Traditional data formats, including JSON, are like dots. They're great for organizing and separating individual events, but understanding what story they tell requires parsing and interpretation.
+Traditional data formats are like dots. They're great for organizing and separating individual events, but understanding what story they tell requires parsing and interpretation.
 
-BEAT is like a line. It captures the same data as JSON, but because the user journey flows like music, the story becomes clear right away.
+BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away.
+
+```
+_device:1_referrer:5_scrolls:32_clicks:8_duration:12047_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2~54*mycart@---3
+_device:1_referrer:1_scrolls:24_clicks:7_duration:11993_beat:!p1~2403*img-1~1194*buy-1~13/8/8*buy-1-up~532*review~14!review~1923*nav-1@---1
+_device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
+```
+
+When events are stored across separate fields, as in JSON, understanding the full context means stitching scattered pieces back together. A BEAT sequence captures a complete journey on a single line at the moment it unfolds, the way a memory naturally surfaces as one continuous flow rather than disconnected fragments. And as that continuous flow stacks line by line, it grows the way another memory stacks neatly upon an associated existing one. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
 
 BEAT expresses its semantic states using only Printable ASCII (0x20 to 0x7E) tokens that pass smoothly through compute and security layers. No separate encoding or decoding is required, and because it's small enough to live in native storage, real-time analysis runs without delay across most environments.
 
@@ -145,24 +153,6 @@ So BEAT is raw data, but it's also self-contained. No semantic parsing needed. T
 And AI is the expert at understanding natural language.
 
 ```
-_device:1_referrer:5_scrolls:32_clicks:8_duration:12047_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2~54*mycart@---3
-_device:1_referrer:1_scrolls:24_clicks:7_duration:11993_beat:!p1~2403*img-1~1194*buy-1~13/8/8*buy-1-up~532*review~14!review~1923*nav-1@---1
-_device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
-```
-
-When events are stored across separate fields, understanding the full context means stitching scattered pieces back together. A BEAT sequence captures a complete journey on a single line at the moment it unfolds, the way a memory naturally surfaces as one continuous flow rather than disconnected fragments.
-
-Multiple BEAT sequences can be written in an NDJSON-compatible line format, with each journey kept on a single line. This keeps logs compact, makes querying simple, and improves AI analysis efficiency. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's semantically complete stream allows fast merging and easy compatibility with their respective formats.
-
-Of course, this NDJSON-style representation is optional. The same data can be expressed in a simplified BEAT format while preserving its 1-byte scan performance, such as: `_scrolls:56_clicks:15_duration:1205.2_beat:...`.
-
-The purpose of this representation is to respect traditional data formats, including JSON, and the services built around them (such as BigQuery), so that BEAT can be adopted easily and coexist with them rather than trying to replace them.
-
-```
-NDJSON Style:
-{"device":1,"referrer":5,"scrolls":56,"clicks":15,"duration":1205.2,"beat":"!home~23.7*nav-2~190.8*nav-3~37.5/12.3*help~112.8*more-1~4.3!prod~103.4*button-12~105.0*p1@---2!p1~240.3*img-1~119.4*buy-1~1.3/0.8/0.8*buy-1-up~53.2*review~1.4!review~192.3*nav-1@---1~5.4*mycart@---3!cart"}
-
-BEAT Style:
 [DATA] _device:1_referrer:5_scrolls:56_clicks:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart
 [CONTEXT] Mobile user, Mapped(5) visit, 56 scrolls, 15 clicks, 1205.2 seconds
 [SUMMARY] Confused behavior. Landed on homepage, hesitated in help section with repeated clicks at 37 and 12 second intervals. Moved to product page, opened details in a new tab, viewed images for about 240 seconds. Tapped buy button three times at 1.3, 0.8, and 0.8 second intervals. Returned to the first tab and opened cart shortly after, but didn’t proceed to checkout.
