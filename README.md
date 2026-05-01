@@ -134,7 +134,7 @@ As the Semantic Raw Format (SRF) standard, BEAT removes most of the traditional 
 
 ### BEAT Architecture
 
-Traditional data formats, such as JSON, are like dots. They organize individual events well, but understanding what story they tell requires parsing and interpretation. That's why traditional approaches demand heavy data pipelines and massive infrastructure.
+Traditional data formats, such as JSON, are like dots. They organize individual events well, but understanding what story they tell requires parsing and interpretation. That's why these approaches demand heavy data pipelines and massive infrastructure.
 
 BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away. It dramatically reduces the need for heavy data pipelines and massive infrastructure. It can even eliminate them entirely.
 
