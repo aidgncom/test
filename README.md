@@ -40,13 +40,13 @@ Do not interpret this comparison as mere data compression. BEAT's value is defin
 
 **1,413 Bytes (Minified)**
 
-`{"meta":{"device":"mobile","referrer":"search","session_metrics":{"total_scrolls":56,"total_clicks":15,"total_duration_ms":1205200}},"events_stream":[{"tab_id":1,"context":"home","timestamp_offset_ms":0,"actions":[{"name":"nav-2","time_since_last_action_ms":23700},{"name":"nav-3","time_since_last_action_ms":190800},{"name":"help","time_since_last_action_ms":37500,"repeats":{"count":1,"intervals_ms":[12300]}},{"name":"more-1","time_since_last_action_ms":112800}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":4300,"actions":[{"name":"button-12","time_since_last_action_ms":103400},{"name":"p1","time_since_last_action_ms":105000,"event_type":"tab_switch","target_tab_id":2}]},{"tab_id":2,"context":"p1","timestamp_offset_ms":0,"actions":[{"name":"img-1","time_since_last_action_ms":240300},{"name":"buy-1","time_since_last_action_ms":119400},{"name":"buy-1-up","time_since_last_action_ms":2900,"flow_intervals_ms":[1300,800,800],"flow_clicks":3},{"name":"review","time_since_last_action_ms":53200}]},{"tab_id":2,"context":"review","time_since_last_context_ms":1400,"actions":[{"name":"nav-1","time_since_last_action_ms":192300,"event_type":"tab_switch","target_tab_id":1}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":0,"actions":[{"name":"mycart","time_since_last_action_ms":5400,"event_type":"tab_switch","target_tab_id":3}]},{"tab_id":3,"context":"cart","timestamp_offset_ms":0}]}`
+`{"meta":{"device":"mobile","referrer":"direct","session_metrics":{"total_scrolls":56,"total_clicks":15,"total_duration_ms":1205200}},"events_stream":[{"tab_id":1,"context":"home","timestamp_offset_ms":0,"actions":[{"name":"nav-2","time_since_last_action_ms":23700},{"name":"nav-3","time_since_last_action_ms":190800},{"name":"help","time_since_last_action_ms":37500,"repeats":{"count":1,"intervals_ms":[12300]}},{"name":"more-1","time_since_last_action_ms":112800}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":4300,"actions":[{"name":"button-12","time_since_last_action_ms":103400},{"name":"p1","time_since_last_action_ms":105000,"event_type":"tab_switch","target_tab_id":2}]},{"tab_id":2,"context":"p1","timestamp_offset_ms":0,"actions":[{"name":"img-1","time_since_last_action_ms":240300},{"name":"buy-1","time_since_last_action_ms":119400},{"name":"buy-1-up","time_since_last_action_ms":2900,"flow_intervals_ms":[1300,800,800],"flow_clicks":3},{"name":"review","time_since_last_action_ms":53200}]},{"tab_id":2,"context":"review","time_since_last_context_ms":1400,"actions":[{"name":"nav-1","time_since_last_action_ms":192300,"event_type":"tab_switch","target_tab_id":1}]},{"tab_id":1,"context":"prod","time_since_last_context_ms":0,"actions":[{"name":"mycart","time_since_last_action_ms":5400,"event_type":"tab_switch","target_tab_id":3}]},{"tab_id":3,"context":"cart","timestamp_offset_ms":0}]}`
 
 ### BEAT - Semantic Raw Format
 
-**300 Bytes**
+**275 Bytes**
 
-`_device:1_referrer:5_scrolls:56_clicks:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart`
+`_device:mobile_referrer:direct_scroll:56_click:15_duration:1205.2_beat:!home~23.7*nav-2~190.8*nav-3~37.5/12.3*help~112.8*more-1~4.3!prod~103.4*button-12~105.0*p1@---2!p1~240.3*img-1~119.4*buy-1~1.3/0.8/0.8*buy-1-up~53.2*review~1.4!review~192.3*nav-1@---1~5.4*mycart@---3!cart`
 
 <br />
 
@@ -139,9 +139,9 @@ Traditional data formats, such as JSON, are like dots. They organize individual 
 BEAT is like a line. It captures the same events, but because the user journey flows like music, the story becomes clear right away. It dramatically reduces the need for heavy data pipelines and massive infrastructure. It can even eliminate them entirely.
 
 ```
-_device:1_referrer:5_scrolls:32_clicks:8_duration:12047_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2~54*mycart@---3
-_device:1_referrer:1_scrolls:24_clicks:7_duration:11993_beat:!p1~2403*img-1~1194*buy-1~13/8/8*buy-1-up~532*review~14!review~1923*nav-1@---1
-_device:1_referrer:1_scrolls:0_clicks:0_duration:12052_beat:!cart
+_device:1_referrer:0_scroll:32_click:8_duration:12047_beat:!home~237*nav-2~1908*nav-3~375/123*help~1128*more-1~43!prod~1034*button-12~1050*p1@---2~54*mycart@---3
+_device:1_referrer:1_scroll:24_click:7_duration:11993_beat:!p1~2403*img-1~1194*buy-1~13/8/8*buy-1-up~532*review~14!review~1923*nav-1@---1
+_device:1_referrer:1_scroll:0_click:0_duration:12052_beat:!cart
 ```
 
 A BEAT sequence captures a complete journey on a single line at the moment it unfolds, the way a memory naturally surfaces as one continuous flow rather than disconnected fragments. And as that continuous flow stacks line by line, whole memories come together into a larger story. Across Finance, Game, Healthcare, IoT, Logistics, and other environments, BEAT's self-contained semantic stream allows fast merging and easy compatibility with their respective formats.
@@ -153,8 +153,7 @@ So BEAT is raw data, but it's also self-contained. No semantic parsing needed. T
 And AI is the expert at understanding natural language.
 
 ```
-[DATA] _device:1_referrer:5_scrolls:56_clicks:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart
-[CONTEXT] Mobile user, Mapped(5) visit, 56 scrolls, 15 clicks, 1205.2 seconds
+[DATA] `_device:mobile_referrer:direct_scroll:56_click:15_duration:1205.2_beat:!home ~23.7 *nav-2 ~190.8 *nav-3 ~37.5/12.3 *help ~112.8 *more-1 ~4.3 !prod ~103.4 *button-12 ~105.0 *p1 @---2 !p1 ~240.3 *img-1 ~119.4 *buy-1 ~1.3/0.8/0.8 *buy-1-up ~53.2 *review ~1.4 !review ~192.3 *nav-1 @---1 ~5.4 *mycart @---3 !cart`
 [SUMMARY] Confused behavior. Landed on homepage, hesitated in help section with repeated clicks at 37 and 12 second intervals. Moved to product page, opened details in a new tab, viewed images for about 240 seconds. Tapped buy button three times at 1.3, 0.8, and 0.8 second intervals. Returned to the first tab and opened cart shortly after, but didn’t proceed to checkout.
 [ISSUE] Cart reached but purchase not completed. Repeated buy actions may reflect either intentional multi-item additions or friction in option selection. Long delay before checkout suggests uncertainty.
 [ACTION] Evaluate if repeated buy or cart actions represent deliberate comparison behavior or checkout friction. If friction is likely, simplify option handling and highlight key product details earlier in the flow.
