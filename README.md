@@ -48,23 +48,48 @@ Do not interpret this comparison as mere data compression. BEAT is not merely a 
 
 `_device:mobile_referrer:direct_scroll:56_click:15_duration:1205.2_beat:!home~23.7*nav-2~190.8*nav-3~37.5/12.3*help~112.8*more-1~4.3!prod~103.4*button-12~105.0*p1@---2!p1~240.3*img-1~119.4*buy-1~1.3/0.8/0.8*buy-1-up~53.2*review~1.4!review~192.3*nav-1@---1~5.4*mycart@---3!cart`
 
-### ⚡ Zero-Allocation Impact: O(1) vs O(N) Scaling
+### ⚡ Zero-Allocation Impact: O(N) vs O(1) Scaling
+
 The true power of BEAT is not just speed, but its constant-time extraction capability. As the payload grows, JSON's processing time increases linearly, while BEAT remains perfectly flat.
 
 | Extractor Engine | Small Payload (1x) | Large Payload (5x) | Complexity |
 | :--- | :--- | :--- | :--- |
-| `JSON.parse` (Native C++) | ~5,703 ns | ~25,540 ns | ⚠️ **O(N)** (Linear Growth) |
-| **BEAT Scanner** (Pure JS) | **~190 ns** | **~190 ns** | 🚀 **O(1)** (Constant Time) |
-| **Speedup vs JSON** | **29.9x Faster** | **134.4x Faster** | **433x Net Advantage** |
-
-*(Note: BEAT achieves 134.4x faster extraction using pure JavaScript against V8's native C++ JSON parser. When combined with its 3.22x smaller network footprint, it delivers a **433x Net Advantage (Bytes × Time)** in edge deployment scenarios.)*
+| `JSON.parse` | ~5,703 ns | ~25,540 ns | ⚠️ O(N) (Linear Growth) |
+| `BEAT Reader` | ~190 ns | ~190 ns | 🚀 O(1) (Constant Time) |
+| **결과 설명** | **29.9x Faster** | **134.4x Faster** | **특징 설명** |
 
 *[View Full Benchmark Report ↗](./BENCHMARK.md)*
 
+### ⚠️ TL;DR: BEAT is NOT just a fast format
 
-// imporatnt : 벤치마크 결과를 통해, 비트를 절대 빠른 포멧으로 단정하지 말아달라. 비트는 단순히 속도 개선을 위해 만들어 진 것이 아니다 라는 설명
+다음 비교는 공개 벤치마크 정보와 일반 실행 환경을 기준으로 1만 건 처리 비용만 단순히 스케일링한 추정입니다. BEAT Reader 구현체는 불리한 조건을 포함한 비교임을 우선 명확히 전달합니다.
 
-변경중
+| 시스템 | 일반 실행 환경 | 1만 건 총 지연 추정 | 네트워크 | 무엇까지 포함 |
+|---|---|---:|---:|---|
+| **BEAT Reader** | **구조적으로 same-runtime** | **약 0.4 ms** | **0 ms** | **6만 record stream 중 wildcard pattern으로 관련 1만 건 필터링, value range 추출, callback 실행부 진입, handler dispatch 가능** |
+| **BEAT Reader for JSON** | **구조적으로 same-runtime** | **약 0.5 ms** | **0 ms** | **JSON 입력을 tree 없이 BEAT 좌표 stream처럼 읽고, 관련 1만 건 필터링, value range 추출, callback 실행부 진입, handler dispatch 가능** |
+| simdjson C++ | native boundary 또는 별도 service | 약 10에서 100 ms 이상 | 있음 | payload 전달, parse, 결과 반환, app 실행부 전달 |
+| yyjson C | native boundary 또는 별도 service | 약 10에서 120 ms 이상 | 있음 | payload 전달, parse, 결과 반환, app 실행부 전달 |
+| RapidJSON C++ | native boundary 또는 별도 service | 약 20에서 160 ms 이상 | 있음 | payload 전달, DOM/SAX parse, 결과 반환 |
+| Boost.JSON | native boundary 또는 별도 service | 약 20에서 180 ms 이상 | 있음 | payload 전달, parse, 결과 반환 |
+| Node.js JSON.parse | Node app 내부 | 약 5에서 50 ms | 0 ms | V8 parse, JS object tree 생성, 실행부 전달 |
+| Go encoding/json | Go app 내부 | 약 20에서 100 ms | 0 ms | decode, Go object 생성, 실행부 전달 |
+| Python orjson | Python app 내부, Rust extension | 약 20에서 120 ms | 0 ms | decode, Python object 생성, 실행부 전달 |
+| Python json | Python app 내부 | 약 80에서 400 ms | 0 ms | decode, Python object 생성, 실행부 전달 |
+| SQLite | same-process DB | 약 10에서 80 ms | 0 ms | SQL 실행, row materialization, row access |
+| DuckDB | same-process OLAP DB | 약 10에서 100 ms | 0 ms | vectorized query, result materialization |
+| Redis pipeline | remote memory store | 약 5에서 80 ms | 있음 | RTT, command batch, response transfer, client decode |
+| PostgreSQL | remote DB | 약 30에서 200 ms 이상 | 있음 | query, result set 구성, 전송, driver decode |
+| MySQL | remote DB | 약 30에서 200 ms 이상 | 있음 | query, result set 구성, 전송, driver decode |
+| MongoDB | remote document DB | 약 40에서 300 ms 이상 | 있음 | find, BSON batch, getMore 가능성, 전송, driver decode |
+| Elasticsearch | remote search engine | 약 80에서 500 ms 이상 | 있음 | query, filtering/scoring, JSON response, 전송, decode |
+| BigQuery | remote analytics service | 수백 ms에서 수 초 | 있음 | planning, distributed execution, result return |
+
+BEAT Reader의 0.4 ms는 JavaScript 구현체 기준이며, 단순 1만 건 조회가 아니라 6만 record stream에서 wildcard pattern으로 관련 1만 건을 필터링하고, value range를 추출하고, callback 실행부에 진입하며, handler dispatch까지 포함한다. lower-level C 구현체에서는 더 빠른 결과를 확인할 수 있다.
+
+BEAT Reader for JSON 구현체는 일반적인 JSON을 BEAT Notation을 사용하는 `_key:value` 형식으로 전처리하여, 메모리 증폭을 발생시키는 `JSON.parse` 과정 없이 BEAT.read로 흘려보냅니다. 즉, BEAT뿐만 아니라 JSON에서도 zero-allocation 스캔과 Topological Coordinates의 가치를 경험할 수 있습니다.
+
+See the [Topological Coordinates](#topological-coordinates) section for the core structure behind this result.
 
 <br />
 
@@ -320,7 +345,7 @@ _3-1-2 type:vehicle
 _3-1-3 object-data
 _3-1-3-1 bbox
 
-_3-1-3-1-1 x:612			// 컴퓨터가 x 값을 원하는 경우, Topological Coordinates와 zero-allocation 스캔으로 612를 즉시 확인
+_3-1-3-1-1 x:612			// Topological Coordinates와 zero-allocation 스캔은 612 값을 파싱 없이 즉시 확인 가능
 
 _3-1-3-1-2 y:244
 _3-1-3-1-3 w:96
@@ -554,43 +579,6 @@ BEAT.read(stream, STREAM, (beat, ms, me, ks, ke, vs, ve, index) => {
 });
 ```
 
-| 시스템 | 일반 실행 환경 | 1만 건 총 지연 추정 | 네트워크 | 무엇까지 포함 |
-|---|---|---:|---:|---|
-| **BEAT Reader** | **구조적으로 same-runtime** | **약 0.4 ms** | **0 ms** | **6만 record stream 중 wildcard pattern으로 관련 1만 건 필터링, value range 추출, callback 실행부 진입, handler dispatch 가능** |
-| **BEAT Reader for JSON** | **구조적으로 same-runtime** | **약 0.5 ms** | **0 ms** | **JSON 입력을 tree 없이 BEAT 좌표 stream처럼 읽고, 관련 1만 건 필터링, value range 추출, callback 실행부 진입, handler dispatch 가능** |
-| simdjson C++ | native boundary 또는 별도 service | 약 10에서 100 ms 이상 | 있음 | payload 전달, parse, 결과 반환, app 실행부 전달 |
-| yyjson C | native boundary 또는 별도 service | 약 10에서 120 ms 이상 | 있음 | payload 전달, parse, 결과 반환, app 실행부 전달 |
-| RapidJSON C++ | native boundary 또는 별도 service | 약 20에서 160 ms 이상 | 있음 | payload 전달, DOM/SAX parse, 결과 반환 |
-| Boost.JSON | native boundary 또는 별도 service | 약 20에서 180 ms 이상 | 있음 | payload 전달, parse, 결과 반환 |
-| Node.js JSON.parse | Node app 내부 | 약 5에서 50 ms | 0 ms | V8 parse, JS object tree 생성, 실행부 전달 |
-| Go encoding/json | Go app 내부 | 약 20에서 100 ms | 0 ms | decode, Go object 생성, 실행부 전달 |
-| Python orjson | Python app 내부, Rust extension | 약 20에서 120 ms | 0 ms | decode, Python object 생성, 실행부 전달 |
-| Python json | Python app 내부 | 약 80에서 400 ms | 0 ms | decode, Python object 생성, 실행부 전달 |
-| SQLite | same-process DB | 약 10에서 80 ms | 0 ms | SQL 실행, row materialization, row access |
-| DuckDB | same-process OLAP DB | 약 10에서 100 ms | 0 ms | vectorized query, result materialization |
-| Redis pipeline | remote memory store | 약 5에서 80 ms | 있음 | RTT, command batch, response transfer, client decode |
-| PostgreSQL | remote DB | 약 30에서 200 ms 이상 | 있음 | query, result set 구성, 전송, driver decode |
-| MySQL | remote DB | 약 30에서 200 ms 이상 | 있음 | query, result set 구성, 전송, driver decode |
-| MongoDB | remote document DB | 약 40에서 300 ms 이상 | 있음 | find, BSON batch, getMore 가능성, 전송, driver decode |
-| Elasticsearch | remote search engine | 약 80에서 500 ms 이상 | 있음 | query, filtering/scoring, JSON response, 전송, decode |
-| BigQuery | remote analytics service | 수백 ms에서 수 초 | 있음 | planning, distributed execution, result return |
-
-## 주석
-
-| 항목 | 정합성 근거 |
-|---|---|
-| BEAT Reader | 0.4 ms는 현재 JavaScript 구현 기준이며, 단순 1만 건 조회가 아니라 6만 record stream에서 wildcard pattern으로 관련 1만 건을 필터링하고, value range를 잡고, callback 실행부에 진입하며, 구조상 handler dispatch까지 가능한 값이다. lower-level C 구현체에서는 더 빠른 결과를 확인할 수 있다. |
-| BEAT Reader for JSON | JSON 입력을 tree로 만들지 않고 BEAT 좌표 stream처럼 읽어, 관련 1만 건 필터링, value range 추출, callback 실행부 진입, handler dispatch 가능 범위까지 포함한다. tree 구성 이후 처리하는 JSON parser 경로가 아니라, BEAT Reader와 같은 scan, filter, extract, dispatch 경로를 따른다. |
-| simdjson | 공식 설명상 GB/s급 JSON parser이고 NDJSON은 3.5 GB/s, minify는 6 GB/s, UTF-8 validation은 13 GB/s까지 제시한다. 이 수치는 parser 내부 처리량 기준이다. 일반 실행 환경 표에서는 native boundary, payload 전달, 결과 반환, 실행부 전달을 포함한다. |
-| yyjson | 공식 설명상 modern CPU에서 JSON data를 GB/s 단위로 read/write할 수 있다. 이 역시 parser 내부 처리량 기준이다. 일반 실행 환경에서는 호출 경계와 결과 전달 비용이 붙는다. |
-| RapidJSON 비교 | simdjson 공식 설명은 RapidJSON보다 4배 이상 빠르고, JSON for Modern C++보다 25배 빠르다고 제시한다. 그래서 일반 실행 환경에서 RapidJSON과 nlohmann/json 계열은 simdjson보다 높은 범위로 잡는 것이 정합적이다. |
-| Redis 네트워크 | Redis 공식 문서는 1 Gbit/s network의 typical latency를 약 200 us로 설명한다. 원격 memory store는 RTT, response transfer, client decode를 포함해야 한다. |
-| PostgreSQL 네트워크 | PostgreSQL 공식 pipeline mode 문서는 round trip latency가 누적된다는 점을 예시로 설명한다. 300 ms RTT 환경에서 100-statement 작업은 pipelining 없이 network latency만 30초가 될 수 있다고 든다. |
-| PostgreSQL 일반 latency | EnterpriseDB 자료는 client/server round-trip latency가 localhost 0.01 ms, switched network 약 0.5 ms, WiFi 5 ms, ADSL 20 ms, intercontinental 300 ms까지 갈 수 있다고 설명한다. trivial SELECT의 server-side 실행은 0.1 ms 수준일 수 있지만, 일반 앱에서는 왕복과 결과 전달이 붙는다. |
-| MongoDB | MongoDB 공식 문서는 cursor가 query result를 가리키며 결과를 batch 단위로 iterate한다고 설명한다. `cursor.batchSize()` 문서는 initial batch가 101 documents 또는 16 MiB 중 작은 값이고, subsequent batch는 최대 16 MiB라고 설명한다. 1만 건 반환은 batch, getMore 가능성, 전송, BSON decode를 포함하는 추정이 맞다. |
-| DuckDB | DuckDB 공식 자료는 benchmark 결과가 공식 TPC/LDBC 결과가 아니라고 선을 긋고, 별도 블로그에서 최근 3년간 3에서 25배 빨라졌다고 설명한다. same-process OLAP DB라도 query와 result materialization 비용을 포함하는 범위 추정이 맞다. |
-| BigQuery | BigQuery 공식 문서는 query plan, execution details, optimization을 별도로 다루며, serverless analytics service다. 일반 실행 환경에서는 planning, distributed execution, result return이 포함되므로 수백 ms에서 수 초 범위로 잡는 것이 정합적이다. |
-
 BEAT reader는 zero-allocation 스캔으로 바코드를 찍듯 데이터를 검증합니다. BEAT Notation과 Topological Coordinates 체계가 이미 의미론적으로 완성되어 있으므로 전체 데이터를 검증할 필요가 없습니다. 잘못된 데이터가 비처럼 쏟아져도 물에 젖지 않습니다.
 
 데이터 무결성이 중요한 경우 다음과 같은 시도를 할 수 있습니다. `_4dva1ser-2-3-1-2-1 x:184.2 _4dva1ser-2-3-1-2-2 y:72.8 _4dva1ser-2-3-1-2-3 yaw:-2.1` 예시는 `4dva1ser`와 같은 meta prefix를 좌표 안에 배치하여 스캔 허용 기준으로 삼습니다.
@@ -612,7 +600,7 @@ _users-0000000001-2-1 ...
 
 `_users-0000000001-info_users-0000000001-info-username:aidgn`처럼 Topological Coordinates를 모두 meta prefix로 할당하는 방법도 있습니다. 재밌게도 이 방법은 Web Advaiser implementation의 `_key:value` 예시처럼 일반적인 BEAT 형식을 계층적으로 표현한 것입니다.
 
-JSON to SRF 구현체는 일반적인 JSON을 BEAT Notation을 사용하는 `_key:value` 형식으로 전처리하여, 메모리 증폭을 발생시키는 `JSON.parse` 과정 없이 BEAT.read로 흘려보냅니다. 즉, BEAT뿐만 아니라 JSON에서도 zero-allocation 스캔과 Topological Coordinates의 가치를 경험할 수 있습니다.
+BEAT Reader for JSON 구현체는 일반적인 JSON을 BEAT Notation을 사용하는 `_key:value` 형식으로 전처리하여, 메모리 증폭을 발생시키는 `JSON.parse` 과정 없이 BEAT.read로 흘려보냅니다. 즉, BEAT뿐만 아니라 JSON에서도 zero-allocation 스캔과 Topological Coordinates의 가치를 경험할 수 있습니다.
 
 BEAT는 처음부터 다른 언어 및 포맷들과 공존하도록 설계되었습니다. 그리고 BEAT의 가장 큰 장점은, 양자 텐서 사례처럼 across diverse domains and platforms에서 동일한 표현으로 Interpretation할 수 있다는 점입니다. 로우 레벨부터 하이 레벨까지, translation layer가 필요하지 않습니다.
 
