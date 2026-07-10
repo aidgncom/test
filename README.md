@@ -85,7 +85,7 @@ The true power of BEAT is not just speed, but its constant-time extraction capab
 | Elasticsearch | remote search engine | 약 80에서 500 ms 이상 | 있음 | query, filtering/scoring, JSON response, 전송, decode |
 | BigQuery | remote analytics service | 수백 ms에서 수 초 | 있음 | planning, distributed execution, result return |
 
-BEAT Reader의 0.4 ms는 JavaScript 구현체 기준이며, 단순 1만 건 조회가 아니라 6만 record stream에서 wildcard pattern으로 관련 1만 건을 필터링하고, value range를 추출하고, callback 실행부에 진입하며, handler dispatch까지 포함한다. lower-level C 구현체에서는 더 빠른 결과를 확인할 수 있다.
+BEAT Reader의 0.4 ms는 JavaScript 구현체 기준이며, 단순 1만 건 조회가 아니라 6만 record stream에서 wildcard pattern으로 관련 1만 건을 필터링하고, value range를 추출하고, callback 실행부에 진입하며, handler dispatch까지 포함한다. lower-level C 구현체에서는 더 빠른 결과를 기대할 수 있다.
 
 BEAT Reader for JSON 구현체는 일반적인 JSON을 BEAT Notation을 사용하는 `_key:value` 형식으로 전처리하여, 메모리 증폭을 발생시키는 `JSON.parse` 과정 없이 BEAT.read로 흘려보냅니다. 즉, BEAT뿐만 아니라 JSON에서도 zero-allocation 스캔과 Topological Coordinates의 가치를 경험할 수 있습니다.
 
@@ -140,7 +140,7 @@ const A = '*';	// Action (what)
 const F = '/';	// Flow (how)
 const V = ':';	// Causal Value (why)
 const M = '_';	// Domain-specific extension
-const D = '.';	// Domain-specific extension
+const D = ' ';	// Domain-specific extension
 ```
 
 **xPU platform example**
@@ -152,7 +152,7 @@ a = srf == 42			# '*' Action (what)
 f = srf == 47			# '/' Flow (how)
 v = srf == 58			# ':' Causal Value (why)
 m = srf == 95			# '_' Domain-specific extension
-d = srf == 46			# '.' Domain-specific extension
+d = srf == 32			# ' ' Domain-specific extension
 ```
 
 **Embedded platform example**
@@ -164,7 +164,7 @@ d = srf == 46			# '.' Domain-specific extension
 #define SRF_F '/'				// Flow (how)
 #define SRF_V ':'				// Causal Value (why)
 #define SRF_M '_'				// Domain-specific extension
-#define SRF_D '.'				// Domain-specific extension
+#define SRF_D ' '				// Domain-specific extension
 ```
 
 **WebAssembly platform example**
@@ -176,7 +176,7 @@ d = srf == 46			# '.' Domain-specific extension
 (i32.eq (local.get $srf) (i32.const 47))	;; '/' Flow (how)
 (i32.eq (local.get $srf) (i32.const 58))	;; ':' Causal Value (why)
 (i32.eq (local.get $srf) (i32.const 95))	;; '_' Domain-specific extension
-(i32.eq (local.get $srf) (i32.const 46))	;; '.' Domain-specific extension
+(i32.eq (local.get $srf) (i32.const 32))	;; ' ' Domain-specific extension
 ```
 
 **Quantum platform example**
@@ -188,7 +188,7 @@ d = srf == 46			# '.' Domain-specific extension
 |100> = 47   ;; '/' Flow (how)
 |101> = 58   ;; ':' Causal Value (why)
 |110> = 95   ;; '_' Domain-specific extension
-|111> = 46   ;; '.' Domain-specific extension
+|111> = 32   ;; ' ' Domain-specific extension
 
 // For tensor-like multi-index notation, see the Topological Coordinates section
 ```
